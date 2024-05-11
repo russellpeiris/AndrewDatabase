@@ -41,7 +41,6 @@ const Create = () => {
   const [activeKey, setActiveKey] = useState('qna'); 
 
   const onFinish = (values) => {
-    console.log('Success:', values);
     // Submit the form data to your backend here
   };
 

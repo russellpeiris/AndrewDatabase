@@ -30,14 +30,9 @@ const QnACollapse = ({ qna }) => {
                             <Row gutter={16}>
                                 {q.images.map((image, i) => (
                                     <Image key={i} placeholder={<ImageLoader />} src={image}
-                                        height={isMobile ? '' : 300}
-                                        // width={isMobile ? 300 : ''}
                                         width={300}
-                                        style={{
-                                            objectFit: 'cover',
-                                            padding: '8px',
-                                            // minWidth: '300px',
-                                        }}
+                                        height={300}
+                                        style={{ objectFit: 'cover',padding: '8px'}}
                                          />
                                 ))}
                             </Row>
