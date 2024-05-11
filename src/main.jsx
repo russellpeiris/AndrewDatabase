@@ -20,7 +20,11 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           FloatButton: {
             colorPrimary: "#00b96b",
             algorithm: true,
-          }
+          },
+          Tabs: {
+            colorPrimary: "#00b96b",
+            algorithm: true,
+          },
         },
       }}
     >

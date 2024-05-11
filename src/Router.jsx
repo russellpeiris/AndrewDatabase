@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Create from "./components/createModal/Create";
 import Home from "./pages/home/Home";
-import Create from "./pages/create/Create";
 
 const Router = () => {
   return (

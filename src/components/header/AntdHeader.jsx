@@ -1,5 +1,5 @@
 import { Layout, Typography } from "antd";
-import Create from "../../pages/create/Create";
+import Create from "../createModal/Create";
 
 const { Header } = Layout;
 
