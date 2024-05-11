@@ -1,8 +1,9 @@
 import { CopyOutlined } from '@ant-design/icons';
-import { Col, Collapse, Flex, Image, Row, Spin, Tag, Tooltip, Typography, message } from 'antd';
+import { Collapse, Flex, Image, Row, Tag, Tooltip, Typography, message } from 'antd';
 import { ImageLoader } from '../spin/Loader';
 
 const QnACollapse = ({ qna }) => {
+    const isMobile = window.innerWidth < 768;
     const handleCopyToClipboard = (text) => {
         navigator.clipboard.writeText(text)
             .then(() => message.success('Copied to clipboard'))
@@ -15,7 +16,7 @@ const QnACollapse = ({ qna }) => {
             label: (index + 1) + '. ' + q.question,
             children: (
                 <Flex style={{ flexDirection: 'column' }}>
-                    <Flex>
+                    <Flex style={{ marginBottom: '8px' }}>
                         <Tooltip title="Copy to Clipboard">
                             <Tag icon={<CopyOutlined />} style={{ cursor: 'pointer' }}
                                 onClick={() => handleCopyToClipboard(q.answer)}></Tag>
@@ -28,9 +29,16 @@ const QnACollapse = ({ qna }) => {
                         {q.images && q.images.length > 0 && (
                             <Row gutter={16}>
                                 {q.images.map((image, i) => (
-                                    <Col key={i} span={24} xs={8} md={6} lg={4}>
-                                        <Image  placeholder={<ImageLoader/>} src={image} />
-                                    </Col>
+                                    <Image key={i} placeholder={<ImageLoader />} src={image}
+                                        height={isMobile ? '' : 300}
+                                        // width={isMobile ? 300 : ''}
+                                        width={300}
+                                        style={{
+                                            objectFit: 'cover',
+                                            padding: '8px',
+                                            // minWidth: '300px',
+                                        }}
+                                         />
                                 ))}
                             </Row>
                         )}

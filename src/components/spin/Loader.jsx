@@ -37,12 +37,12 @@ export const ImageLoader = ({ ...props }) => {
         alignItems: 'center',
       }}
     >
-      <StyledSpinner
+      {/* <StyledSpinner
         indicator={
           <LoadingOutlined style={{ fontSize: 24, color: 'white' }} spin />
         }
         {...props}
-      />
+      /> */}
       <Lottie style={{ height: '50px' }} animationData={loader} loop={true} />
     </Flex>
   );
