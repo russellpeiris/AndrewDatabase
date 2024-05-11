@@ -12,8 +12,6 @@
   },
   "dependencies": {
     "@emotion/styled": "^11.11.5",
-    "@firebase/firestore": "^4.6.1",
-    "@firebase/storage": "^0.12.4",
     "antd": "^5.17.0",
     "firebase": "^10.11.1",
     "lottie-react": "^2.4.0",

@@ -3,7 +3,6 @@ import { Collapse, Flex, Image, Row, Tag, Tooltip, Typography, message } from 'a
 import { ImageLoader } from '../spin/Loader';
 
 const QnACollapse = ({ qna }) => {
-    const isMobile = window.innerWidth < 768;
     const handleCopyToClipboard = (text) => {
         navigator.clipboard.writeText(text)
             .then(() => message.success('Copied to clipboard'))
