@@ -21,7 +21,7 @@ const AntdHeader = () => {
       >
         Andrew Database
       </Typography.Title>
-      <Create/>
+      <Create />
     </Header>
   );
 };

@@ -17,7 +17,6 @@ function App() {
 
 export default App;
 
-
 function AppLoader() {
   const { isLoading } = useLoader();
   return isLoading ? <Loader /> : null;
