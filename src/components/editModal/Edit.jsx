@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { formItemLayout } from "../../constants/formLayout";
 import { beforeUpload } from "../../helpers/fileHelpers";
 import { getCategories } from "../../hooks/category";
-import { uploadImages } from "../../hooks/images";
+import { deleteImage, uploadImages } from "../../hooks/images";
 import { updateQnA } from "../../hooks/qna";
 
 const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
@@ -82,6 +82,7 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
 
   const handleDeleteImage = (imageUrl) => {
     setExistingImages((images) => images.filter((image) => image !== imageUrl));
+    deleteImage(imageUrl);
     setLimit((limit) => limit + 1);
   };
 
