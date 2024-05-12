@@ -10,9 +10,9 @@ import {
   Upload,
   message,
 } from "antd";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { db, storage } from "../../configs/firebaseConfig.js";
 
 const { TabPane } = Tabs;
@@ -44,6 +44,7 @@ const Create = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeKey, setActiveKey] = useState("qna");
   const [isLoading, setIsLoading] = useState(false);
+  const [categoryOptions, setCategoryOptions] = useState([]);
 
   const uploadImages = async (fileList) => {
     const imageUrls = [];
@@ -122,6 +123,7 @@ const Create = () => {
   const handleRemove = (file) => {
     setFileList(fileList.filter((f) => f.uid !== file.uid));
   };
+
   const beforeUpload = (file) => {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
     if (!isJpgOrPng) {
@@ -139,7 +141,34 @@ const Create = () => {
     qnaForm.resetFields();
     categoryForm.resetFields();
     setFileList([]);
+    setActiveKey("qna");
   };
+
+  const getCategories = async () => {
+    const categories = [];
+    const categoriesRef = collection(db, "categories");
+    const categorySnapshot = await getDocs(categoriesRef);
+
+    if (categorySnapshot.empty) {
+      return categories;
+    }
+
+    categorySnapshot.forEach((doc) => {
+      const categoryData = doc.data();
+      categories.push({ label: categoryData.category, value: categoryData.category });
+    });
+
+    return categories;
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      getCategories().then((categories) => {
+        setCategoryOptions(categories);
+      });
+    }
+  }, [isOpen]);
+
   return (
     <>
       <FloatButton
@@ -177,7 +206,10 @@ const Create = () => {
               </Form.Item>
 
               <Form.Item label="Category" name="category">
-                <Select />
+                <Select
+                  options={categoryOptions}
+                  placeholder="Select a category"
+                />
               </Form.Item>
 
               <Form.Item label="Username" name="username">
