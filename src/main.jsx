@@ -29,6 +29,22 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             colorPrimary: "#00b96b",
             algorithm: true,
           },
+          Select: {
+            colorPrimary: "#00b96b",
+            algorithm: true,
+          },
+          Input: {
+            colorPrimary: "#00b96b",
+            algorithm: true,
+          },
+          Form: {
+            colorPrimary: "#00b96b",
+            algorithm: true,
+          },
+          Upload: {
+            colorPrimary: "#00b96b",
+            algorithm: true,
+          },
         },
       }}
     >

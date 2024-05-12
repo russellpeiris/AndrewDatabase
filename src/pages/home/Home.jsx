@@ -17,11 +17,16 @@ const Home = () => {
   const { isLoading } = useQuery("qna", getAllQnA);
 
   const handleSearch = (e) => {
-    setSearchTerm(e.target.value.toLowerCase());
-    const filtered = qna.filter((q) =>
-      q.question.toLowerCase().includes(searchTerm),
-    );
-    setFilteredQuestions(filtered);
+    const searchTerm = e.target.value.toLowerCase();
+    setSearchTerm(searchTerm);
+    if (searchTerm === '') {
+      setFilteredQuestions(qna); 
+    } else {
+      const filtered = qna.filter((q) =>
+        q.question.toLowerCase().includes(searchTerm)
+      );
+      setFilteredQuestions(filtered);
+    }
   };
 
   const handleFilter = (value) => {
