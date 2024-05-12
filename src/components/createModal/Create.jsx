@@ -10,10 +10,10 @@ import {
   Upload,
   message,
 } from "antd";
-import { addDoc, collection, getDocs } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useEffect, useState } from "react";
-import { db, storage } from "../../configs/firebaseConfig.js";
+import { createCategory, getCategories } from "../../hooks/category.js";
+import { uploadImages } from "../../hooks/images.js";
+import { createQnA } from "../../hooks/qna.js";
 
 const { TabPane } = Tabs;
 
@@ -37,76 +37,49 @@ const formItemLayout = {
   },
 };
 
-const Create = () => {
+const Create = ({onClose}) => {
   const [fileList, setFileList] = useState([]);
   const [qnaForm] = Form.useForm();
   const [categoryForm] = Form.useForm();
   const [isOpen, setIsOpen] = useState(false);
   const [activeKey, setActiveKey] = useState("qna");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const [categoryOptions, setCategoryOptions] = useState([]);
 
-  const uploadImages = async (fileList) => {
-    const imageUrls = [];
-    for (const file of fileList) {
-      const storageRef = ref(storage, `images/${file.uid}`);
 
-      try {
-        const uploadTask = await uploadBytes(storageRef, file.originFileObj);
-        const imageUrl = await getDownloadURL(uploadTask.ref);
-        imageUrls.push(imageUrl);
-      } catch (error) {
-        console.error("Error uploading image:", error);
-      }
-    }
-    return imageUrls;
-  };
   const onFinish = async () => {
-    const categoryRef = collection(db, "categories");
-    const qnaRef = collection(db, "qna");
-
     if (activeKey === "qna") {
       const qnaValues = qnaForm.getFieldsValue();
       await qnaForm.validateFields();
-      setIsLoading(true);
+      setIsCreating(true);
       try {
         let imageUrls = [];
         if (fileList.length > 0) {
           imageUrls = await uploadImages(fileList);
         }
-        await addDoc(qnaRef, {
-          question: qnaValues.question || "",
-          answer: qnaValues.answer || "",
-          category: qnaValues.category || "",
-          username: qnaValues.username || "",
-          images: imageUrls || [],
-        }).then(() => {
+        await createQnA(qnaValues, imageUrls).then(() => {
           message.success("Q&A added successfully!");
         });
       } catch (error) {
         console.error("Error adding Q&A:", error.message);
       } finally {
-        setIsLoading(false);
-        qnaForm.resetFields();
-        setIsOpen(false);
+        setIsCreating(false);
+        handleModalClose();
       }
     } else if (activeKey === "category") {
       const categoryValues = categoryForm.getFieldsValue();
       await categoryForm.validateFields();
-      setIsLoading(true);
+      setIsCreating(true);
       try {
-        await addDoc(categoryRef, { category: categoryValues.category }).then(
-          () => {
-            message.success("Category added successfully!");
-          },
+        await createCategory(categoryValues).then(() => {
+          message.success("Category added successfully!");
+        },
         );
       } catch (error) {
         message.error("Error adding category:", error.message);
       } finally {
-        setIsLoading(false);
-        categoryForm.resetFields();
-        setIsOpen(false);
-        setFileList([]);
+        setIsCreating(false);
+        handleModalClose();
       }
     }
   };
@@ -142,23 +115,7 @@ const Create = () => {
     categoryForm.resetFields();
     setFileList([]);
     setActiveKey("qna");
-  };
-
-  const getCategories = async () => {
-    const categories = [];
-    const categoriesRef = collection(db, "categories");
-    const categorySnapshot = await getDocs(categoriesRef);
-
-    if (categorySnapshot.empty) {
-      return categories;
-    }
-
-    categorySnapshot.forEach((doc) => {
-      const categoryData = doc.data();
-      categories.push({ label: categoryData.category, value: categoryData.category });
-    });
-
-    return categories;
+    onClose();
   };
 
   useEffect(() => {
@@ -183,7 +140,7 @@ const Create = () => {
         okText="Create"
         onCancel={handleModalClose}
         width={"80vw"}
-        confirmLoading={isLoading}
+        confirmLoading={isCreating}
       >
         <Tabs activeKey={activeKey} onChange={setActiveKey}>
           <TabPane tab="Q&A" key="qna">

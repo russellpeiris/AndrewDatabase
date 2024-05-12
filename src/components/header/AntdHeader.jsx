@@ -1,5 +1,4 @@
 import { Layout, Typography } from "antd";
-import Create from "../createModal/Create";
 
 const { Header } = Layout;
 
@@ -21,7 +20,6 @@ const AntdHeader = () => {
       >
         Andrew Database
       </Typography.Title>
-      <Create />
     </Header>
   );
 };
