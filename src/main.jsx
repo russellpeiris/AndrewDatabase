@@ -25,6 +25,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             colorPrimary: "#00b96b",
             algorithm: true,
           },
+          Modal: {
+            colorPrimary: "#00b96b",
+            algorithm: true,
+          },
         },
       }}
     >

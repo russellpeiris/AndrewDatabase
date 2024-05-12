@@ -23,12 +23,7 @@ const getCategories = async () => {
 };
 
 const createCategory = async (categoryValues) => {
-    await addDoc(categoryRef, { category: categoryValues.category });
-}
-
+  await addDoc(categoryRef, { category: categoryValues.category });
+};
 
 export { createCategory, getCategories };
-
-
-
-

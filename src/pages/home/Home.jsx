@@ -1,18 +1,20 @@
 import { Flex, Input, Select } from "antd";
 import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import QnACollapse from "../../components/collapse/QnACollapse";
 import Create from "../../components/createModal/Create";
+import { Loader } from "../../components/spin/Loader";
 import { getCategories } from "../../hooks/category";
-import { getQnA } from "../../hooks/qna";
+import { getAllQnA } from "../../hooks/qna";
 
 const Home = () => {
-
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [categories, setCategories] = useState([]);
   const [toggleModal, setToggleModal] = useState(false);
   const [qna, setQna] = useState([]);
   const [filteredQuestions, setFilteredQuestions] = useState(qna);
+  const { isLoading } = useQuery("qna", getAllQnA);
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value.toLowerCase());
@@ -36,7 +38,9 @@ const Home = () => {
       setCategories(categories);
     });
 
-    getQnA().then((qna) => {
+    getAllQnA().then((qna) => {
+      //sort by latest
+      qna.sort((a, b) => b.createdAt - a.createdAt);
       setQna(qna);
       setFilteredQuestions(qna);
     });
@@ -44,33 +48,33 @@ const Home = () => {
 
   return (
     <>
-    <Flex
-      style={{
-        flexDirection: "column",
-        padding: 16,
-      }}
-    >
-      <Input.Search
-        placeholder="Search questions"
-        onChange={handleSearch}
-        style={{ marginBottom: 16 }}
-      />
-      <Select
-        defaultValue="all"
-        onChange={handleFilter}
-        style={{ width: "fit-content", marginBottom: 16 }}
+      <Flex
+        style={{
+          flexDirection: "column",
+          padding: 16,
+        }}
       >
-        <Select.Option value="all">All Categories</Select.Option>
-        {categories.map((c) => (
-          <Select.Option key={c.value} value={c.value}>
-            {c.label}
-          </Select.Option>
-        ))}
-      </Select>
-      <QnACollapse qna={filteredQuestions} />
-    </Flex>
-    <Create onClose={() => setToggleModal(!toggleModal)}/>
-</>
+        <Input.Search
+          placeholder="Search questions"
+          onChange={handleSearch}
+          style={{ marginBottom: 16 }}
+        />
+        <Select
+          defaultValue="all"
+          onChange={handleFilter}
+          style={{ width: "fit-content", marginBottom: 16 }}
+        >
+          <Select.Option value="all">All Categories</Select.Option>
+          {categories.map((c) => (
+            <Select.Option key={c.value} value={c.value}>
+              {c.label}
+            </Select.Option>
+          ))}
+        </Select>
+        {isLoading ? <Loader /> : <QnACollapse qna={filteredQuestions} onClose={() => setToggleModal(!toggleModal)}/>}
+      </Flex>
+      <Create onClose={() => setToggleModal(!toggleModal)} />
+    </>
   );
 };
 

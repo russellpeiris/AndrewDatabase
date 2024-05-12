@@ -11,33 +11,15 @@ import {
   message,
 } from "antd";
 import { useEffect, useState } from "react";
+import { formItemLayout } from "../../constants/formLayout.js";
+import { beforeUpload } from "../../helpers/fileHelpers.js";
 import { createCategory, getCategories } from "../../hooks/category.js";
 import { uploadImages } from "../../hooks/images.js";
 import { createQnA } from "../../hooks/qna.js";
 
 const { TabPane } = Tabs;
 
-const formItemLayout = {
-  labelCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 6,
-    },
-    lg: {
-      span: 4,
-    },
-    xl: {
-      span: 3,
-    },
-  },
-  wrapperCol: {
-    span: 24,
-  },
-};
-
-const Create = ({onClose}) => {
+const Create = ({ onClose }) => {
   const [fileList, setFileList] = useState([]);
   const [qnaForm] = Form.useForm();
   const [categoryForm] = Form.useForm();
@@ -45,7 +27,6 @@ const Create = ({onClose}) => {
   const [activeKey, setActiveKey] = useState("qna");
   const [isCreating, setIsCreating] = useState(false);
   const [categoryOptions, setCategoryOptions] = useState([]);
-
 
   const onFinish = async () => {
     if (activeKey === "qna") {
@@ -73,8 +54,7 @@ const Create = ({onClose}) => {
       try {
         await createCategory(categoryValues).then(() => {
           message.success("Category added successfully!");
-        },
-        );
+        });
       } catch (error) {
         message.error("Error adding category:", error.message);
       } finally {
@@ -95,18 +75,6 @@ const Create = ({onClose}) => {
 
   const handleRemove = (file) => {
     setFileList(fileList.filter((f) => f.uid !== file.uid));
-  };
-
-  const beforeUpload = (file) => {
-    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-    if (!isJpgOrPng) {
-      message.error("You can only upload JPG/PNG file!");
-    }
-    const isLt5M = file.size / 1024 / 1024 < 5;
-    if (!isLt5M) {
-      message.error("Image must be smaller than 5MB!");
-    }
-    return isJpgOrPng && isLt5M;
   };
 
   const handleModalClose = () => {
