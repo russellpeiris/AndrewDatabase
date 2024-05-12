@@ -72,8 +72,7 @@ const updateQnA = async (id, qnaValues, imageUrls) => {
     category: qnaValues.category || "",
     username: qnaValues.username || "",
     images: imageUrls || [],
-    createdAt : new Date(),
+    createdAt: new Date(),
   });
 };
 export { createQnA, deleteQnA, getAllQnA, getQnAById, updateQnA };
-

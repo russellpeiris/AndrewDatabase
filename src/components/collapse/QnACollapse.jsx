@@ -135,7 +135,12 @@ const QnACollapse = ({ qna, onClose }) => {
   return (
     <>
       <Collapse accordion items={items} />
-      <Edit isOpen={isOpen} setIsOpen={setIsOpen} data={selectedQnA} onClose={onClose} />
+      <Edit
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        data={selectedQnA}
+        onClose={onClose}
+      />
     </>
   );
 };

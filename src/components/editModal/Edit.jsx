@@ -1,5 +1,17 @@
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Image, Input, Modal, Popconfirm, Row, Select, Upload, message } from "antd";
+import {
+  Button,
+  Col,
+  Form,
+  Image,
+  Input,
+  Modal,
+  Popconfirm,
+  Row,
+  Select,
+  Upload,
+  message,
+} from "antd";
 import { useEffect, useState } from "react";
 import { formItemLayout } from "../../constants/formLayout";
 import { beforeUpload } from "../../helpers/fileHelpers";
@@ -33,11 +45,13 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
         imageUrls = await uploadImages(fileList);
       }
       imageUrls = [...existingImages, ...imageUrls];
-      await updateQnA(data.id, qnaValues, imageUrls).then(() => {
-        message.success("Q&A updated successfully!");
-      }).catch((error) => {
-        message.error("Error updating Q&A:", error.message);
-      });
+      await updateQnA(data.id, qnaValues, imageUrls)
+        .then(() => {
+          message.success("Q&A updated successfully!");
+        })
+        .catch((error) => {
+          message.error("Error updating Q&A:", error.message);
+        });
     } catch (error) {
       console.error("Error updating Q&A:", error.message);
     } finally {
@@ -80,9 +94,15 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
     }
   }, [data, isOpen]);
 
-  const handleDeleteImage = (imageUrl) => {
+  const handleDeleteImage = async (imageUrl) => {
     setExistingImages((images) => images.filter((image) => image !== imageUrl));
-    deleteImage(imageUrl);
+    await deleteImage(imageUrl)
+      .then(() => {
+        message.success("Image deleted successfully!");
+      })
+      .catch((error) => {
+        message.error("Error deleting image:", error.message);
+      });
     setLimit((limit) => limit + 1);
   };
 
@@ -122,29 +142,37 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
           <Input />
         </Form.Item>
 
-        {
-          existingImages.length > 0 && (
-            <Form.Item label="Existing Images">
-              <Row gutter={8}>
-                {existingImages.map((imageUrl, index) => (
-                  <Col key={index}>
-                    <Popconfirm
-                title="Are you sure you want to delete this image?"
-                onConfirm={() => handleDeleteImage(imageUrl)}
-                placement="top"
-                okText="Yes"
-                cancelText="No"
-                okType="danger"
-              >
-                <Image src={imageUrl} preview={false} style={{ width: 60, objectFit: 'cover', height: 60 }} />
-                <Button type="ghost" danger icon={<DeleteOutlined />} size="small" style={{ position: "absolute", top: 0, right: 0 }} />
-              </Popconfirm>               
-                  </Col>
-                ))}
-              </Row>
-            </Form.Item>
-          )
-        }
+        {existingImages.length > 0 && (
+          <Form.Item label="Existing Images">
+            <Row gutter={8}>
+              {existingImages.map((imageUrl, index) => (
+                <Col key={index}>
+                  <Popconfirm
+                    title="Are you sure you want to delete this image?"
+                    onConfirm={() => handleDeleteImage(imageUrl)}
+                    placement="top"
+                    okText="Yes"
+                    cancelText="No"
+                    okType="danger"
+                  >
+                    <Image
+                      src={imageUrl}
+                      preview={false}
+                      style={{ width: 60, objectFit: "cover", height: 60 }}
+                    />
+                    <Button
+                      type="ghost"
+                      danger
+                      icon={<DeleteOutlined />}
+                      size="small"
+                      style={{ position: "absolute", top: 0, right: 0 }}
+                    />
+                  </Popconfirm>
+                </Col>
+              ))}
+            </Row>
+          </Form.Item>
+        )}
 
         <Form.Item label="Images (Max 7)">
           <Upload

@@ -19,11 +19,11 @@ const Home = () => {
   const handleSearch = (e) => {
     const searchTerm = e.target.value.toLowerCase();
     setSearchTerm(searchTerm);
-    if (searchTerm === '') {
-      setFilteredQuestions(qna); 
+    if (searchTerm === "") {
+      setFilteredQuestions(qna);
     } else {
       const filtered = qna.filter((q) =>
-        q.question.toLowerCase().includes(searchTerm)
+        q.question.toLowerCase().includes(searchTerm),
       );
       setFilteredQuestions(filtered);
     }
@@ -76,7 +76,14 @@ const Home = () => {
             </Select.Option>
           ))}
         </Select>
-        {isLoading ? <Loader /> : <QnACollapse qna={filteredQuestions} onClose={() => setToggleModal(!toggleModal)}/>}
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <QnACollapse
+            qna={filteredQuestions}
+            onClose={() => setToggleModal(!toggleModal)}
+          />
+        )}
       </Flex>
       <Create onClose={() => setToggleModal(!toggleModal)} />
     </>
