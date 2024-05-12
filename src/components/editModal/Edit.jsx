@@ -1,5 +1,5 @@
-import { UploadOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Image, Input, Modal, Row, Select, Upload, message } from "antd";
+import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Button, Col, Form, Image, Input, Modal, Popconfirm, Row, Select, Upload, message } from "antd";
 import { useEffect, useState } from "react";
 import { formItemLayout } from "../../constants/formLayout";
 import { beforeUpload } from "../../helpers/fileHelpers";
@@ -80,6 +80,11 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
     }
   }, [data, isOpen]);
 
+  const handleDeleteImage = (imageUrl) => {
+    setExistingImages((images) => images.filter((image) => image !== imageUrl));
+    setLimit((limit) => limit + 1);
+  };
+
   return (
     <Modal
       title="Update Q&A"
@@ -122,7 +127,17 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
               <Row gutter={8}>
                 {existingImages.map((imageUrl, index) => (
                   <Col key={index}>
-                    <Image src={imageUrl} style={{ width: 60, objectFit: 'cover', height: 60 }} />
+                    <Popconfirm
+                title="Are you sure you want to delete this image?"
+                onConfirm={() => handleDeleteImage(imageUrl)}
+                placement="top"
+                okText="Yes"
+                cancelText="No"
+                okType="danger"
+              >
+                <Image src={imageUrl} preview={false} style={{ width: 60, objectFit: 'cover', height: 60 }} />
+                <Button type="ghost" danger icon={<DeleteOutlined />} size="small" style={{ position: "absolute", top: 0, right: 0 }} />
+              </Popconfirm>               
                   </Col>
                 ))}
               </Row>
