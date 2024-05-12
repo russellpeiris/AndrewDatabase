@@ -26,6 +26,7 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
   const [qnaForm] = Form.useForm();
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [limit, setLimit] = useState(7);
+  const [currentImage, setCurrentImage] = useState(null);
 
   const handleModalClose = () => {
     setIsOpen(false);
@@ -47,6 +48,7 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
       imageUrls = [...existingImages, ...imageUrls];
       await updateQnA(data.id, qnaValues, imageUrls)
         .then(() => {
+          currentImage && deleteImage(currentImage);
           message.success("Q&A updated successfully!");
         })
         .catch((error) => {
@@ -96,13 +98,6 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
 
   const handleDeleteImage = async (imageUrl) => {
     setExistingImages((images) => images.filter((image) => image !== imageUrl));
-    await deleteImage(imageUrl)
-      .then(() => {
-        message.success("Image deleted successfully!");
-      })
-      .catch((error) => {
-        message.error("Error deleting image:", error.message);
-      });
     setLimit((limit) => limit + 1);
   };
 
@@ -149,7 +144,10 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
                 <Col key={index}>
                   <Popconfirm
                     title="Are you sure you want to delete this image?"
-                    onConfirm={() => handleDeleteImage(imageUrl)}
+                    onConfirm={() => {
+                      setCurrentImage(imageUrl);
+                      handleDeleteImage(imageUrl);
+                    }}
                     placement="top"
                     okText="Yes"
                     cancelText="No"
