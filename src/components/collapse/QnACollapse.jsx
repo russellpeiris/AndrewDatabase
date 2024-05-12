@@ -21,6 +21,7 @@ const QnACollapse = ({ qna, onClose }) => {
   const [visible, setVisible] = useState(false);
   const [selectedQnA, setSelectedQnA] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
   const handleCopyToClipboard = (text) => {
     navigator.clipboard
       .writeText(text)
@@ -46,9 +47,10 @@ const QnACollapse = ({ qna, onClose }) => {
   };
 
   const handleConfirmation = async (q) => {
-    await handleDeleteQnA(q.id);
+    await handleDeleteQnA(q);
     onClose();
     setVisible(false);
+    setDeleteId(null);
   };
   const items = qna.map((q, index) => {
     return {
@@ -109,6 +111,7 @@ const QnACollapse = ({ qna, onClose }) => {
               icon={<DeleteOutlined />}
               style={{ cursor: "pointer" }}
               onClick={(e) => {
+                setDeleteId(q.id);
                 setVisible(true);
                 e.stopPropagation();
               }}
@@ -116,8 +119,8 @@ const QnACollapse = ({ qna, onClose }) => {
           </Tooltip>
           <Modal
             title="Delete Q&A"
-            open={visible}
-            onOk={() => handleConfirmation(q)}
+            open={visible && deleteId === q.id}
+            onOk={() => handleConfirmation(deleteId)}
             onCancel={() => setVisible(false)}
             okText="Delete"
             confirmLoading={isLoading}
