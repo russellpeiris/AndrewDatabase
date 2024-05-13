@@ -45,6 +45,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             colorPrimary: "#00b96b",
             algorithm: true,
           },
+          Menu: {
+            colorPrimary: "#00b96b",
+            algorithm: true,
+          },
         },
       }}
     >
