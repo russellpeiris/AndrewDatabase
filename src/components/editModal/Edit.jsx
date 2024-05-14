@@ -24,11 +24,11 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
   const [existingImages, setExistingImages] = useState([]);
   const [fileList, setFileList] = useState([]);
   const [qnaForm] = Form.useForm();
-  const [subCategoryOptions, setSubCategoryOptions] = useState([]);
+  const [categoryOptions, setCategoryOptions] = useState([]);
   const [limit, setLimit] = useState(7);
   const [currentImage, setCurrentImage] = useState(null);
-  const [parentCategoryOptions, setParentCategoryOptions] = useState([]);
-  const [categoryArray, setCategoryArray] = useState([]);
+  const [parentCategory, setParentCategory] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const handleModalClose = () => {
     setIsOpen(false);
@@ -88,25 +88,24 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
       setExistingImages(data.images);
       setLimit(7 - data.images.length);
       getCategories().then((categories) => {
-        setParentCategoryOptions(
+        setParentCategory(
           categories.map((category) => ({
-            label: category.parentCategoryOptions,
-            value: category.parentCategoryOptions,
+            label: category.parentCategory,
+            value: category.parentCategory,
           })),
         );
-        const category = categories.find(
-          (cat) => cat.parentCategoryOptions === data.parentCategoryOptions,
-        );
-        setSubCategoryOptions(
+        const category = categories.find((cat) => cat.parentCategory === data.parentCategory);
+        setCategoryOptions(
           category.subCategories.map((subCategories) => ({
             label: subCategories,
             value: subCategories,
           })),
         );
-        setCategoryArray(categories);
+        setCategories(categories);
       });
     }
   }, [data, isOpen]);
+
 
   const handleDeleteImage = async (imageUrl) => {
     setExistingImages((images) => images.filter((image) => image !== imageUrl));
@@ -115,10 +114,8 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
 
   const handleSubCategory = (value) => {
     qnaForm.setFieldsValue({ subCategory: undefined });
-    const category = categoryArray.find(
-      (cat) => cat.parentCategoryOptions === value,
-    );
-    setSubCategoryOptions(
+    const category = categories.find((cat) => cat.parentCategory === value);
+    setCategoryOptions(
       category.subCategories.map((subCategories) => ({
         label: subCategories,
         value: subCategories,
@@ -154,20 +151,17 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
           <Input.TextArea />
         </Form.Item>
 
-        <Form.Item label="Parent Category" name="parentCategoryOptions">
+        <Form.Item label="Parent Category" name="parentCategory">
           <Select
-            options={parentCategoryOptions}
+            options={parentCategory}
             onChange={handleSubCategory}
             placeholder="Select a category"
           />
         </Form.Item>
 
-        {(subCategoryOptions.length > 0 || data.subCategory) && (
+        {(categoryOptions.length > 0 || data.subCategory) && (
           <Form.Item label="Subcategory" name="subCategory">
-            <Select
-              options={subCategoryOptions}
-              placeholder="Select a category"
-            />
+            <Select options={categoryOptions} placeholder="Select a category" />
           </Form.Item>
         )}
 
