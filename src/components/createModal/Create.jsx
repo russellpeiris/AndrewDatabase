@@ -139,7 +139,7 @@ const Create = ({ onClose }) => {
         })),
       );
     });
-  }, []);
+  }, [isOpen]);
 
   return (
     <>

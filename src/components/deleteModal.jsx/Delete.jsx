@@ -42,6 +42,9 @@ const Delete = ({ onClose }) => {
   };
 
   const handleModalClose = () => {
+    setCategories([]);
+    setCategoryOptions([]);
+    setParentCategory([]);
     setIsOpen(false);
     onClose();
   };
@@ -70,7 +73,7 @@ const Delete = ({ onClose }) => {
         })),
       );
     });
-  }, []);
+  }, [isOpen]);
 
   return (
     <>
