@@ -87,7 +87,8 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
       qnaForm.setFieldsValue({
         question: data.question,
         answer: data.answer,
-        category: data.category,
+        parentCategory: data.parentCategory,
+        subCategory: data.subCategory,
         username: data.username,
       });
       setExistingImages(data.images);
