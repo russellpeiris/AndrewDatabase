@@ -27,6 +27,8 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [limit, setLimit] = useState(7);
   const [currentImage, setCurrentImage] = useState(null);
+  const [parentCategory, setParentCategory] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const handleModalClose = () => {
     setIsOpen(false);
@@ -91,17 +93,13 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
       setExistingImages(data.images);
       setLimit(7 - data.images.length);
       getCategories().then((categories) => {
-        //array of all children
-        let children = [];
-        categories.forEach((category) => {
-          children = children.concat(category.children);
-        });
-        setCategoryOptions(children.map((child) => {
-          return {
-            label: child,
-            value: child,
-          };
-        }));
+        setParentCategory(
+          categories.map((category) => ({
+            label: category.parentCategory,
+            value: category.parentCategory,
+          })),
+        );
+        setCategories(categories);
       });
     }
   }, [data, isOpen]);
@@ -109,6 +107,15 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
   const handleDeleteImage = async (imageUrl) => {
     setExistingImages((images) => images.filter((image) => image !== imageUrl));
     setLimit((limit) => limit + 1);
+  };
+  const handleSubCategory = (value) => {
+    const category = categories.find((cat) => cat.parentCategory === value);
+    setCategoryOptions(
+      category.subCategories.map((subCategories) => ({
+        label: subCategories,
+        value: subCategories,
+      })),
+    );
   };
 
   return (
@@ -139,9 +146,19 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
           <Input.TextArea />
         </Form.Item>
 
-        <Form.Item label="Category" name="category">
-          <Select options={categoryOptions} placeholder="Select a category" />
+        <Form.Item label="Parent Category" name="parentCategory">
+          <Select
+            options={parentCategory}
+            onChange={handleSubCategory}
+            placeholder="Select a category"
+          />
         </Form.Item>
+
+        {categoryOptions.length > 0 && (
+          <Form.Item label="Subcategory" name="subCategory">
+            <Select options={categoryOptions} placeholder="Select a category" />
+          </Form.Item>
+        )}
 
         <Form.Item label="Username" name="username">
           <Input />

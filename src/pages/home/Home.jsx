@@ -29,9 +29,11 @@ const Home = () => {
 
   const handleFilter = (value) => {
     if (value === "all") {
-      setFilteredQuestions(qna); 
+      setFilteredQuestions(qna);
     } else {
-      const filtered = qna.filter((q) => q.category === value);
+      const filtered = qna.filter(
+        (q) => q.parentCategory === value || q.subCategory === value,
+      );
       setFilteredQuestions(filtered);
     }
   };
@@ -47,9 +49,9 @@ const Home = () => {
   useEffect(() => {
     getCategories().then((categories) => {
       categories.map((category) => {
-        category.key = category.category;
-        category.label = category.category;
-        category.children = category.children.map((child) => {
+        category.key = category.parentCategory;
+        category.label = category.parentCategory;
+        category.children = category.subCategories.map((child) => {
           return {
             key: child,
             label: child,
@@ -60,15 +62,11 @@ const Home = () => {
     });
 
     getAllQnA().then((qna) => {
-      //sort by latest
       qna.sort((a, b) => b.createdAt - a.createdAt);
       setQna(qna);
       setFilteredQuestions(qna);
     });
   }, [toggleModal]);
-
-
-
 
   return (
     <>

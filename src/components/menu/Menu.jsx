@@ -1,4 +1,4 @@
-import { Menu as AntDMenu } from 'antd';
+import { Menu as AntDMenu } from "antd";
 
 const Menu = ({ menuItems, onItemClick }) => {
   const handleItemClick = (item) => {
@@ -6,31 +6,34 @@ const Menu = ({ menuItems, onItemClick }) => {
   };
 
   return (
-    <div style={{ margin: '16px 0px 16px 16px' }}>
+    <div style={{ margin: "16px 0px 16px 16px" }}>
       <AntDMenu
         style={{
-          backgroundColor: '#25242B',
-          borderRadius: '8px',
-          border: '1.3px solid rgba(62, 67, 62, 0.632)'
+          backgroundColor: "#25242B",
+          borderRadius: "8px",
+          border: "1.3px solid rgba(62, 67, 62, 0.632)",
         }}
-        defaultSelectedKeys={['1']}
-        defaultOpenKeys={['sub1']}
+        defaultSelectedKeys={["1"]}
+        defaultOpenKeys={["sub1"]}
         mode="inline"
-        onClick={handleItemClick} 
+        onClick={handleItemClick}
       >
-        {menuItems.map(item => (
+        {menuItems.map((item) =>
           //check array length of children
-           item.children && item.children.length > 0 ?
-          (
-            <AntDMenu.SubMenu key={item.key} title={item.label}>
-              {item.children.map(child => (
+          item.children && item.children.length > 0 ? (
+            <AntDMenu.SubMenu
+              key={item.key}
+              title={item.label}
+              onTitleClick={handleItemClick}
+            >
+              {item.children.map((child) => (
                 <AntDMenu.Item key={child.key}>{child.label}</AntDMenu.Item>
               ))}
             </AntDMenu.SubMenu>
           ) : (
             <AntDMenu.Item key={item.key}>{item.label}</AntDMenu.Item>
-          )
-        ))}
+          ),
+        )}
       </AntDMenu>
     </div>
   );

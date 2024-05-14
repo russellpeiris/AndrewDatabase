@@ -18,7 +18,9 @@ const createQnA = async (qnaValues, imageUrls) => {
   await addDoc(qnaRef, {
     question: qnaValues.question || "",
     answer: qnaValues.answer || "",
-    category: qnaValues.category || "",
+    parentCategory: qnaValues.parentCategory || "",
+    subCategories:
+      qnaValues.subCategory === "None" ? "" : qnaValues.subCategory || "",
     username: qnaValues.username || "",
     images: imageUrls || [],
     createdAt: new Date(),
@@ -40,7 +42,8 @@ const getAllQnA = async () => {
       id: doc.id,
       question: qnaData.question,
       answer: qnaData.answer,
-      category: qnaData.category,
+      parentCategory: qnaData.parentCategory,
+      subCategory: qnaData.subCategory,
       username: qnaData.username,
       images: qnaData.images,
     });
@@ -69,7 +72,8 @@ const updateQnA = async (id, qnaValues, imageUrls) => {
   await setDoc(docRef, {
     question: qnaValues.question || "",
     answer: qnaValues.answer || "",
-    category: qnaValues.category || "",
+    parentCategory: qnaValues.parentCategory || "",
+    subCategory: qnaValues.subCategory || "",
     username: qnaValues.username || "",
     images: imageUrls || [],
     createdAt: new Date(),

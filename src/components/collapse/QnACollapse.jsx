@@ -69,7 +69,8 @@ const QnACollapse = ({ qna, onClose }) => {
               </Tooltip>
             )}
             {q.username && <Tag color="success">{q.username}</Tag>}
-            {q.category && <Tag>{q.category}</Tag>}
+            {q.parentCategory && <Tag>{q.parentCategory}</Tag>}
+            {q.subCategory && <Tag>{q.subCategory}</Tag>}
           </Flex>
           <Flex style={{ flexDirection: "column" }}>
             {q.answer && (
