@@ -19,7 +19,7 @@ const createQnA = async (qnaValues, imageUrls) => {
     question: qnaValues.question || "",
     answer: qnaValues.answer || "",
     parentCategory: qnaValues.parentCategory || "",
-    subCategories:
+    subCategory:
       qnaValues.subCategory === "None" ? "" : qnaValues.subCategory || "",
     username: qnaValues.username || "",
     images: imageUrls || [],
