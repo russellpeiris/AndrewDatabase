@@ -94,7 +94,9 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
             value: category.parentCategory,
           })),
         );
-        const category = categories.find((cat) => cat.parentCategory === data.parentCategory);
+        const category = categories.find(
+          (cat) => cat.parentCategory === data.parentCategory,
+        );
         setCategoryOptions(
           category.subCategories.map((subCategories) => ({
             label: subCategories,
@@ -105,7 +107,6 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
       });
     }
   }, [data, isOpen]);
-
 
   const handleDeleteImage = async (imageUrl) => {
     setExistingImages((images) => images.filter((image) => image !== imageUrl));
