@@ -46,6 +46,7 @@ const Delete = ({ onClose }) => {
     setCategoryOptions([]);
     setParentCategory([]);
     setIsOpen(false);
+    catForm.resetFields();
     onClose();
   };
 
