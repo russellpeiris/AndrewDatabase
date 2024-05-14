@@ -122,7 +122,7 @@ const Delete = ({ onClose }) => {
           >
             <Select placeholder="Select a sub category">
               <Select.Option value="all">
-                Delete all under parent category
+                Delete all under including the parent category
               </Select.Option>
               {categoryOptions.map((option) => (
                 <Select.Option key={option.value} value={option.value}>
