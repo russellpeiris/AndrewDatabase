@@ -91,7 +91,17 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
       setExistingImages(data.images);
       setLimit(7 - data.images.length);
       getCategories().then((categories) => {
-        setCategoryOptions(categories);
+        //array of all children
+        let children = [];
+        categories.forEach((category) => {
+          children = children.concat(category.children);
+        });
+        setCategoryOptions(children.map((child) => {
+          return {
+            label: child,
+            value: child,
+          };
+        }));
       });
     }
   }, [data, isOpen]);

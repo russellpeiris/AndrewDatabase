@@ -36,10 +36,27 @@ const Home = () => {
     }
   };
 
+  const transformedCategories = [
+    {
+      key: "all",
+      label: "All Categories",
+    },
+    ...categories,
+  ];
 
   useEffect(() => {
     getCategories().then((categories) => {
-      setCategories(categories);
+      categories.map((category) => {
+        category.key = category.category;
+        category.label = category.category;
+        category.children = category.children.map((child) => {
+          return {
+            key: child,
+            label: child,
+          };
+        });
+        setCategories(categories);
+      });
     });
 
     getAllQnA().then((qna) => {
@@ -50,29 +67,6 @@ const Home = () => {
     });
   }, [toggleModal]);
 
-  const transformedCategories = [
-    {
-      key: 'all',
-      label: 'All Categories'
-    },
-    ...categories.map(category => {
-      if (category.children && category.children.length > 0) {
-        return {
-          key: `sub${category.value}`,
-          label: category.label,
-          children: category.children.map(child => ({
-            key: child.value,
-            label: child.label
-          }))
-        };
-      } else {
-        return {
-          key: category.value,
-          label: category.label
-        };
-      }
-    })
-  ];
 
 
 

@@ -29,58 +29,67 @@ const Create = ({ onClose }) => {
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [parentCategory, setParentCategory] = useState([]);
 
-  const onFinish = async () => {
-    if (activeKey === "qna") {
-      const qnaValues = qnaForm.getFieldsValue();
-      await qnaForm.validateFields();
-      setIsCreating(true);
-      try {
-        let imageUrls = [];
-        if (fileList.length > 0) {
-          imageUrls = await uploadImages(fileList);
-        }
-        await createQnA(qnaValues, imageUrls).then(() => {
-          message.success("Q&A added successfully!");
-        });
-      } catch (error) {
-        console.error("Error adding Q&A:", error.message);
-      } finally {
-        setIsCreating(false);
-        handleModalClose();
+  const handleQnA = async () => {
+    const qnaValues = qnaForm.getFieldsValue();
+    await qnaForm.validateFields();
+    setIsCreating(true);
+    try {
+      let imageUrls = [];
+      if (fileList.length > 0) {
+        imageUrls = await uploadImages(fileList);
       }
-    } else if (activeKey === "category") {
-      const categoryValues = categoryForm.getFieldsValue();
-      await categoryForm.validateFields();
-      setIsCreating(true);
-      try {
-        if(categoryValues.category === "None") {
-          const category = parentCategory.find((category) => 
-            category.value.toLowerCase() === categoryValues.children.toLowerCase()
-          );
-                    if (category) {
-            message.error("Category already exists!");
-            return;
-          }
-          await createCategory(categoryValues.children).then(() => {
-            message.success("Category added successfully!");
-            setIsCreating(false);
-          });
-        } else {
-          const category = parentCategory.find((category) => category.value === categoryValues.category);
-          let children = category.children;
-          children.push(categoryValues.children);
-          await updateChildCategory(categoryValues.category, children).then(() => {
-            message.success("Category updated with sub category successfully!");
-          });
-        }
-      } catch (error) {
-        message.error("Error adding category:", error.message);
-      } finally {
-        setIsCreating(false);
-        handleModalClose();
-      }
+      await createQnA(qnaValues, imageUrls).then(() => {
+        message.success("Q&A added successfully!");
+      });
+    } catch (error) {
+      console.error("Error adding Q&A:", error.message);
+    } finally {
+      setIsCreating(false);
+      handleModalClose();
     }
   };
+  
+  const handleCategory = async () => {
+    const categoryValues = categoryForm.getFieldsValue();
+    await categoryForm.validateFields();
+    setIsCreating(true);
+    try {
+      if (categoryValues.category === "None") {
+        const category = parentCategory.find((category) =>
+          category.value.toLowerCase() === categoryValues.children.toLowerCase()
+        );
+        if (category) {
+          message.error("Category already exists!");
+          return;
+        }
+        await createCategory(categoryValues.children).then(() => {
+          message.success("Category added successfully!");
+          setIsCreating(false);
+        });
+      } else {
+        const category = parentCategory.find((category) => category.value === categoryValues.category);
+        let children = category.children;
+        children.push(categoryValues.children);
+        await updateChildCategory(categoryValues.category, children).then(() => {
+          message.success("Subcategory updated successfully!");
+        });
+      }
+    } catch (error) {
+      message.error("Error adding category:", error.message);
+    } finally {
+      setIsCreating(false);
+      handleModalClose();
+    }
+  };
+  
+  const onFinish = async () => {
+    if (activeKey === "qna") {
+      await handleQnA();
+    } else if (activeKey === "category") {
+      await handleCategory();
+    }
+  };
+  
 
   const handleChange = (info) => {
     const newFileList = info.fileList.slice(-7);
@@ -106,11 +115,20 @@ const Create = ({ onClose }) => {
 
   useEffect(() => {
     if (isOpen) {
-      getCategories().then((parentCategory) => {
-        setCategoryOptions(parentCategory);
+      getCategories().then((categories) => {
+        let children = [];
+        categories.forEach((category) => {
+          children = children.concat(category.children);
+        });
+        setCategoryOptions(children.map((child) => {
+          return {
+            label: child,
+            value: child,
+          };
+        }));
       });
-    }
-  }, [parentCategory]);
+    } 
+  }, [isOpen]);
 
   useEffect(() => {
     getCategories().then((parentCategory) => {
@@ -119,7 +137,12 @@ const Create = ({ onClose }) => {
         return {
           label: category.category,
           value: category.category,
-          children: category.children
+          children: category.children.map((child) => {
+            return {
+              label: child,
+              value: child,
+            };
+          }),
         };
       }));
     });

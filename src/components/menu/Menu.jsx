@@ -19,7 +19,9 @@ const Menu = ({ menuItems, onItemClick }) => {
         onClick={handleItemClick} 
       >
         {menuItems.map(item => (
-          item.children ? (
+          //check array length of children
+           item.children && item.children.length > 0 ?
+          (
             <AntDMenu.SubMenu key={item.key} title={item.label}>
               {item.children.map(child => (
                 <AntDMenu.Item key={child.key}>{child.label}</AntDMenu.Item>
