@@ -13,7 +13,7 @@ import {
 import { useEffect, useState } from "react";
 import { formItemLayout } from "../../constants/formLayout.js";
 import { beforeUpload } from "../../helpers/fileHelpers.js";
-import { createCategory, getCategories } from "../../hooks/category.js";
+import { createCategory, getCategories, updateChildCategory } from "../../hooks/category.js";
 import { uploadImages } from "../../hooks/images.js";
 import { createQnA } from "../../hooks/qna.js";
 
@@ -27,6 +27,7 @@ const Create = ({ onClose }) => {
   const [activeKey, setActiveKey] = useState("qna");
   const [isCreating, setIsCreating] = useState(false);
   const [categoryOptions, setCategoryOptions] = useState([]);
+  const [parentCategory, setParentCategory] = useState([]);
 
   const onFinish = async () => {
     if (activeKey === "qna") {
@@ -52,9 +53,26 @@ const Create = ({ onClose }) => {
       await categoryForm.validateFields();
       setIsCreating(true);
       try {
-        await createCategory(categoryValues).then(() => {
-          message.success("Category added successfully!");
-        });
+        if(categoryValues.category === "None") {
+          const category = parentCategory.find((category) => 
+            category.value.toLowerCase() === categoryValues.children.toLowerCase()
+          );
+                    if (category) {
+            message.error("Category already exists!");
+            return;
+          }
+          await createCategory(categoryValues.children).then(() => {
+            message.success("Category added successfully!");
+            setIsCreating(false);
+          });
+        } else {
+          const category = parentCategory.find((category) => category.value === categoryValues.category);
+          let children = category.children;
+          children.push(categoryValues.children);
+          await updateChildCategory(categoryValues.category, children).then(() => {
+            message.success("Category updated with sub category successfully!");
+          });
+        }
       } catch (error) {
         message.error("Error adding category:", error.message);
       } finally {
@@ -88,10 +106,23 @@ const Create = ({ onClose }) => {
 
   useEffect(() => {
     if (isOpen) {
-      getCategories().then((categories) => {
-        setCategoryOptions(categories);
+      getCategories().then((parentCategory) => {
+        setCategoryOptions(parentCategory);
       });
     }
+  }, [parentCategory]);
+
+  useEffect(() => {
+    getCategories().then((parentCategory) => {
+      // set category without children
+      setParentCategory(parentCategory.map((category) => {
+        return {
+          label: category.category,
+          value: category.category,
+          children: category.children
+        };
+      }));
+    });
   }, [isOpen]);
 
   return (
@@ -170,6 +201,19 @@ const Create = ({ onClose }) => {
               <Form.Item
                 label="Category"
                 name="category"
+              >
+                <Select>
+                  <Select.Option value="None">None (Create new main category)</Select.Option>
+                  {parentCategory.map((category) => (
+                    <Select.Option key={category.value} value={category.value}>
+                      {category.label}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                label="(Sub) Category"
+                name="children"
                 rules={[
                   {
                     required: true,
@@ -180,6 +224,7 @@ const Create = ({ onClose }) => {
                 <Input />
               </Form.Item>
             </Form>
+
           </TabPane>
         </Tabs>
       </Modal>
