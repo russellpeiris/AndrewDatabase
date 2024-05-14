@@ -1,11 +1,16 @@
-import { addDoc, collection, doc, getDocs, setDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  onSnapshot,
+  setDoc,
+} from "firebase/firestore";
 import { db } from "../configs/firebaseConfig";
 
 const categoryRef = collection(db, "categories");
-// const category = {
-//   parentCategory: "",
-//   subCategories: [],
-// }
+
 const getCategories = async () => {
   const querySnapshot = await getDocs(categoryRef);
   let categories = [];
@@ -20,7 +25,6 @@ const createCategory = async (category) => {
 };
 
 const updateChildCategory = async (parentCategory, subCategories) => {
-  //get the document id
   const querySnapshot = await getDocs(categoryRef);
   let categoryId = "";
   querySnapshot.forEach((doc) => {
@@ -32,4 +36,16 @@ const updateChildCategory = async (parentCategory, subCategories) => {
   await setDoc(categoryDoc, { parentCategory, subCategories });
 };
 
-export { createCategory, getCategories, updateChildCategory };
+const deleteCategory = async (category) => {
+  const querySnapshot = await getDocs(categoryRef);
+  let categoryId = "";
+  querySnapshot.forEach((doc) => {
+    if (doc.data().parentCategory === category) {
+      categoryId = doc.id;
+    }
+  });
+  const categoryDoc = doc(categoryRef, categoryId);
+  await deleteDoc(categoryDoc);
+};
+
+export { createCategory, getCategories, updateChildCategory, deleteCategory };

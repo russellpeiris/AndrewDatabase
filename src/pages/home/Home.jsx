@@ -1,13 +1,13 @@
-import { Flex, Input } from "antd";
+import { Flex, FloatButton, Input } from "antd";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import QnACollapse from "../../components/collapse/QnACollapse";
 import Create from "../../components/createModal/Create";
+import Delete from "../../components/deleteModal.jsx/Delete";
 import Menu from "../../components/menu/Menu";
 import { Loader } from "../../components/spin/Loader";
 import { getCategories } from "../../hooks/category";
 import { getAllQnA } from "../../hooks/qna";
-
 const Home = () => {
   const [categories, setCategories] = useState([]);
   const [toggleModal, setToggleModal] = useState(false);
@@ -94,7 +94,11 @@ const Home = () => {
           )}
         </Flex>
       </Flex>
-      <Create onClose={() => setToggleModal(!toggleModal)} />
+
+      <FloatButton.Group>
+        <Create onClose={() => setToggleModal(!toggleModal)} />
+        <Delete onClose={() => setToggleModal(!toggleModal)} />
+      </FloatButton.Group>
     </>
   );
 };

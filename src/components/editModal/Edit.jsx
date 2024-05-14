@@ -155,11 +155,15 @@ const Edit = ({ isOpen, setIsOpen, data, onClose }) => {
           />
         </Form.Item>
 
-        {categoryOptions.length > 0 || qnaForm.getFieldValue("subCategory") && (
-          <Form.Item label="Subcategory" name="subCategory">
-            <Select options={categoryOptions} placeholder="Select a category" />
-          </Form.Item>
-        )}
+        {categoryOptions.length > 0 ||
+          (qnaForm.getFieldValue("subCategory") && (
+            <Form.Item label="Subcategory" name="subCategory">
+              <Select
+                options={categoryOptions}
+                placeholder="Select a category"
+              />
+            </Form.Item>
+          ))}
 
         <Form.Item label="Username" name="username">
           <Input />
