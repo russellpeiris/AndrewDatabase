@@ -3,12 +3,13 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAbWFKIK0AZh2EkIWOlQcki9P6YuQOEUOI",
-  authDomain: "question-and-answer-database.firebaseapp.com",
-  projectId: "question-and-answer-database",
-  storageBucket: "question-and-answer-database.appspot.com",
-  messagingSenderId: "327449683693",
-  appId: "1:327449683693:web:592e256bafcd898d4c8ee4",
+  apiKey: "AIzaSyB7GSiKCDW5JeQ6ltErkhNOeVMt_VQwSQ4",
+  authDomain: "andrew-database-f2700.firebaseapp.com",
+  projectId: "andrew-database-f2700",
+  storageBucket: "andrew-database-f2700.firebasestorage.app",
+  messagingSenderId: "699422212251",
+  appId: "1:699422212251:web:5b2280661e9b0cf52c863e",
+  measurementId: "G-XFJYZ0QKDH"
 };
 
 export const app = initializeApp(firebaseConfig);
