@@ -18,7 +18,7 @@ const AntdHeader = () => {
         level={3}
         style={{ color: "white", marginBottom: "0" }}
       >
-        Andrew Database
+        Introduction to JavaScript
       </Typography.Title>
     </Header>
   );
