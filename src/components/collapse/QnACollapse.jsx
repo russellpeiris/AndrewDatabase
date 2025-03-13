@@ -95,7 +95,7 @@ const QnACollapse = ({ qna, onClose }) => {
       ),
       extra: (
         <>
-          <Tooltip title="Edit Q&A">
+          {/* <Tooltip title="Edit Q&A">
             <Tag
               icon={<EditOutlined />}
               style={{ cursor: "pointer" }}
@@ -117,7 +117,7 @@ const QnACollapse = ({ qna, onClose }) => {
                 e.stopPropagation();
               }}
             />
-          </Tooltip>
+          </Tooltip> */}
           <Modal
             title="Delete Q&A"
             open={visible && deleteId === q.id}
