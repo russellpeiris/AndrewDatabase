@@ -62,7 +62,6 @@ const Home = () => {
     });
 
     getAllQnA().then((qna) => {
-      qna.sort((a, b) => b.createdAt - a.createdAt);
       setQna(qna);
       setFilteredQuestions(qna);
     });

@@ -13,7 +13,7 @@ import { db } from "../configs/firebaseConfig";
 const categoryRef = collection(db, "categories");
 
 const getCategories = async () => {
-  const querySnapshot = await getDocs(categoryRef, orderBy("createdAt", "asc"));
+  const querySnapshot = await getDocs(categoryRef);
   let categories = [];
   querySnapshot.forEach((doc) => {
     categories.push(doc.data());
