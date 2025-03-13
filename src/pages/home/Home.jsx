@@ -94,10 +94,10 @@ const Home = () => {
         </Flex>
       </Flex>
 
-      <FloatButton.Group>
+      {/* <FloatButton.Group>
         <Create onClose={() => setToggleModal(!toggleModal)} />
         <Delete onClose={() => setToggleModal(!toggleModal)} />
-      </FloatButton.Group>
+      </FloatButton.Group> */}
     </>
   );
 };
