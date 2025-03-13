@@ -29,7 +29,7 @@ const createQnA = async (qnaValues, imageUrls) => {
 
 const getAllQnA = async () => {
   const qna = [];
-  const q = query(qnaRef, orderBy("createdAt", "desc"));
+  const q = query(qnaRef, orderBy("createdAt", "asc"));
   const qnaSnapshot = await getDocs(q);
 
   if (qnaSnapshot.empty) {
