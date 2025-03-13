@@ -48,6 +48,7 @@ const Home = () => {
 
   useEffect(() => {
     getCategories().then((categories) => {
+      categories.sort((a, b) => new Date(a.parentCategory.createdAt) - new Date(b.parentCategory.createdAt));
       categories.map((category) => {
         category.key = category.parentCategory;
         category.label = category.parentCategory;
