@@ -18,14 +18,14 @@ const getCategories = async () => {
   querySnapshot.forEach((doc) => {
     categories.push(doc.data());
   });
-  return categories;
+  return categories.sort((a, b) => a.createdAt - b.createdAt);
 };
 
 const createCategory = async (category) => {
-  await addDoc(categoryRef, { parentCategory: category, subCategories: [] });
+  await addDoc(categoryRef, { parentCategory: category, subCategories: [], createdAt: new Date() });
 };
 
-const updateChildCategory = async (parentCategory, subCategories) => {
+const updateChildCategory = async (parentCategory, subCategories, createdAt) => {
   const querySnapshot = await getDocs(categoryRef);
   let categoryId = "";
   querySnapshot.forEach((doc) => {
@@ -34,7 +34,7 @@ const updateChildCategory = async (parentCategory, subCategories) => {
     }
   });
   const categoryDoc = doc(categoryRef, categoryId);
-  await setDoc(categoryDoc, { parentCategory, subCategories });
+  await setDoc(categoryDoc, { parentCategory, subCategories, createdAt });
 };
 
 const deleteCategory = async (category) => {

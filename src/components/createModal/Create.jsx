@@ -43,6 +43,7 @@ const Create = ({ onClose }) => {
       await createQnA(qnaValues, imageUrls);
       message.success("Q&A added successfully!");
     } catch (error) {
+
       console.error("Error adding Q&A:", error.message);
     } finally {
       setIsCreating(false);
@@ -81,6 +82,7 @@ const Create = ({ onClose }) => {
         await updateChildCategory(
           categoryValues.existingCategory,
           updatedChildren,
+          category.createdAt,
         );
         message.success("Subcategory updated successfully!");
       }
